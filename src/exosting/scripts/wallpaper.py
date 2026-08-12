@@ -1,11 +1,15 @@
-import os
 import asyncio
 import json
+import os
+from pathlib import Path
+
 from ignis import utils
-from exosting.user_settings import user_settings
-from .send_notification import send_notification
-from ignis.css_manager import CssManager, CssInfoPath
 from ignis.command_manager import CommandManager
+from ignis.css_manager import CssInfoPath, CssManager
+
+from exosting.user_settings import user_settings
+
+from .send_notification import send_notification
 
 css_manager = CssManager.get_default()
 command_manager = CommandManager.get_default()
@@ -78,6 +82,22 @@ class Wallpaper:
                 )
             )
 
+        theme = (
+            utils.exec_sh("gsettings get org.gnome.desktop.interface gtk-theme")
+            .stdout.strip()
+            .strip("'")
+        )
+
+        source = Path("/usr/share/themes") / theme / "gtk-4.0" / "gtk.css"
+        target = Path.home() / ".config/gtk-4.0/theme.css"
+
+        if not source.is_file():
+            raise FileNotFoundError(f"GTK4 theme CSS not found: {source}")
+
+        css = f'''@import url("{source}");\n@import url("colors.css");'''
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(css, encoding="utf-8")
+
         user_settings.appearance.wallcolors.set_color_scheme(colorScheme)
         Wallpaper.generatePreviews()
         utils.Timeout(ms=3000, target=lambda: css_manager.reload_all_css())
@@ -135,6 +155,32 @@ class Wallpaper:
                     f"gsettings set org.gnome.desktop.interface color-scheme 'prefer-{mode}'"
                 )
             )
+
+        match mode:
+            case "light":
+                utils.exec_sh(
+                    "gsettings set org.gnome.desktop.interface gtk-theme 'Orchis-Light'"
+                )
+            case "dark":
+                utils.exec_sh(
+                    "gsettings set org.gnome.desktop.interface gtk-theme 'Orchis-Dark'"
+                )
+
+        theme = (
+            utils.exec_sh("gsettings get org.gnome.desktop.interface gtk-theme")
+            .stdout.strip()
+            .strip("'")
+        )
+
+        source = Path("/usr/share/themes") / theme / "gtk-4.0" / "gtk.css"
+        target = Path.home() / ".config/gtk-4.0/theme.css"
+
+        if not source.is_file():
+            raise FileNotFoundError(f"GTK4 theme CSS not found: {source}")
+
+        css = f'''@import url("{source}");\n@import url("colors.css");'''
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(css, encoding="utf-8")
 
         user_settings.appearance.wallcolors.set_dark_mode(active)
         Wallpaper.generatePreviews()
