@@ -1,0 +1,58 @@
+{
+    "appearance": {
+        "wallcolors": {
+            "wallpaper_path": "/home/yohan/Pictures/Wallpapers/default.png",
+            "color_scheme": "content",
+            "auto_dark": {
+                "start_hour": 18.0,
+                "end_hour": 8,
+                "enabled": true
+            }
+        }
+    },
+    "interface": {
+        "modules": {
+            "location": {
+                "clock": 1,
+                "workspaces": 0
+            },
+            "visibility": {},
+            "bar_id": {
+                "workspaces": 1
+            },
+            "options": {
+                "workspaces_style": "dots",
+                "fixed_workspaces_enabled": false,
+                "military_time": true
+            }
+        },
+        "bar": {
+            "side": "top",
+            "module_backgrounds": false,
+            "floating": false,
+            "vertical": false
+        },
+        "bar2": {
+            "side": "left",
+            "vertical": true,
+            "density": 3,
+            "module_backgrounds": false,
+            "enabled": true,
+            "floating": false
+        },
+        "notifications": {},
+        "launcher": {},
+        "misc": {
+            "shell_corners": false,
+            "screen_corners": "disabled"
+        }
+    },
+    "services": {
+        "recorder": {},
+        "osd": {
+            "anchor": [
+                "bottom"
+            ]
+        }
+    }
+}

@@ -1,0 +1,19 @@
+[project]
+name = "exosting"
+version = "0.1.0"
+description = "A fork of Exo shell meant for Niri and Hyprland."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "ignis",
+]
+
+[project.scripts]
+exosting = "exosting:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+ignis = { git = "https://github.com/ignis-sh/ignis.git" }
