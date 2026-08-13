@@ -24,7 +24,7 @@ command_manager = CommandManager.get_default()
 Wallpaper.generatePreviews()
 
 css_manager = CssManager.get_default()
-css_manager.widgets_style_priority("user")
+css_manager.widgets_style_priority = "user"  # type: ignore
 css_manager.apply_css(
     CssInfoPath(
         name="main",

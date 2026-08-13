@@ -2,10 +2,9 @@ OK - Fix wallpaper
 OK - Fix palettes not applied
 OK - Fix theme not applied to gnome
 OK - Remove gnome center dependency
-- Proper typings / Remove deprecated instructions / Cleaner code
+In progress - Proper typings / Remove deprecated instructions / Cleaner code
 - Fix matugen palette not changed on auto dark
 - Fix wifi selection transparent window
-- Fix css not changing when moving end widgets to center with "modules" highlights toggled
 - Fix themes not applied to flatpaks
 - Add wallpaper for dark and white themes
 - Add gnome theme selector in settings and apply custom themes with css parsing

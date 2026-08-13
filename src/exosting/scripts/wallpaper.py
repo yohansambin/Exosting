@@ -3,7 +3,6 @@ import json
 import os
 from pathlib import Path
 
-import aiofiles
 from ignis import utils
 from ignis.command_manager import CommandManager
 from ignis.css_manager import CssInfoPath, CssManager
@@ -224,7 +223,7 @@ class Wallpaper:
                 "~/.config/ignis/exosting/styles/preview-colors.scss"
             )
             os.makedirs(os.path.dirname(scss_file_path), exist_ok=True)
-            async with aiofiles.open(scss_file_path, "w") as f:
-                await f.write(scss_content)
+            with open(scss_file_path, "w") as f:  # noqa: ASYNC230
+                f.write(scss_content)
 
         asyncio.create_task(do_generate())

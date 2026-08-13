@@ -1,10 +1,12 @@
-from typing import Any, ClassVar, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from ignis.window_manager import WindowManager
 
-from exosting.modules.bar.bar import Bar
 from exosting.modules.corners import Corners
 from exosting.user_settings import user_settings
+
+if TYPE_CHECKING:
+    from exosting.modules.bar.bar import Bar
 
 
 def rebuild_corners() -> None:
@@ -197,7 +199,7 @@ class BarStyles:
                 if centered
                 else (["top", "bottom", side] if vertical else ["left", "right", side])
             )
-            win.anchor(anchors)
+            win.anchor = anchors  # type: ignore
 
             center_box = win.child
             start_box = center_box.get_start_widget()
