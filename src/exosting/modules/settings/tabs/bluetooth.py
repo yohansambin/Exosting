@@ -60,20 +60,6 @@ class BluetoothTab(widgets.Box):
         )
         self.append(widgets.Separator())
 
-        self.append(
-            SettingsRow(
-                title="Open Bluetooth Settings",
-                description="Open the Bluetooth panel in the GNOME Settings application for advanced configuration.",
-                child=[
-                    Button.button(
-                        icon="barefoot",
-                        label="Open Settings",
-                        on_click=lambda x: self._open_gnome_settings(),
-                    )
-                ],
-            )
-        )
-
         self.bluetooth_service.connect("notify::powered", self._on_property_changed)
         self.bluetooth_service.connect("device-added", self._on_device_changed)
 
@@ -132,14 +118,6 @@ class BluetoothTab(widgets.Box):
             self.device_list_box.append(
                 widgets.Label(label="Bluetooth is off.", halign="center", vexpand=True)
             )
-
-    def _open_gnome_settings(self):
-        try:
-            env = os.environ.copy()
-            env["XDG_CURRENT_DESKTOP"] = "GNOME"
-            subprocess.Popen(["gnome-control-center", "bluetooth"], env=env)
-        except FileNotFoundError:
-            send_notification("Error", "GNOME Control Center not found.")
 
     def create_device_row(self, device):
         icon_map = {

@@ -1,19 +1,16 @@
 OK - Fix wallpaper
 OK - Fix palettes not applied
 OK - Fix theme not applied to gnome
-- Niri overview background color from matugen
-- Remove gnome center dependency
+OK - Remove gnome center dependency
 - Proper typings / Remove deprecated instructions / Cleaner code
 - Fix matugen palette not changed on auto dark
 - Fix wifi selection transparent window
 - Fix css not changing when moving end widgets to center with "modules" highlights toggled
 - Fix themes not applied to flatpaks
 - Add wallpaper for dark and white themes
-- Add gnome theme selector in settings
+- Add gnome theme selector in settings and apply custom themes with css parsing
 - Add terminal command in settings
 - Change power menu style 
 - Add application handler
-- Test recorder
-- Fix/Add screenshots ?
 - Add clipboard
 - Add papirus and cursor icon color changes on colors update

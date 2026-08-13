@@ -1,11 +1,14 @@
-import os
-from datetime import datetime
 import asyncio
-from ignis.services.recorder import RecorderService, RecorderConfig
+import os
+from datetime import UTC, datetime
+
 from ignis.command_manager import CommandManager
-from ignis.services.recorder.service import RecorderPortalCaptureCanceled
-from .send_notification import send_notification
+from ignis.exceptions import RecorderPortalCaptureCanceled
+from ignis.services.recorder import RecorderConfig, RecorderService
+
 from exosting.user_settings import user_settings
+
+from .send_notification import send_notification
 
 command_manager = CommandManager.get_default()
 recorder = RecorderService.get_default()
@@ -14,13 +17,13 @@ recording_indicator_instance = None
 options = user_settings.services.recorder
 
 
-def set_indicator(indicator):
+def set_indicator(indicator) -> None:
     global recording_indicator_instance
     recording_indicator_instance = indicator
 
 
-def _on_recording_started(service):
-    global last_recording_path
+def _on_recording_started(service) -> None:
+    global last_recording_path  # noqa: PLW0602
     if recording_indicator_instance:
         recording_indicator_instance.set_paused(False)
         if user_settings.interface.modules.options.recording_indicator != "never":
@@ -32,24 +35,23 @@ def _on_recording_started(service):
             )
 
 
-def _on_recording_stopped(service):
+def _on_recording_stopped(service) -> None:
     global last_recording_path
     if recording_indicator_instance:
         recording_indicator_instance.stop_timer()
-    if last_recording_path:
-        if options.stop_notification:
-            send_notification(
-                "Recording Stopped", f"Recording saved to: {last_recording_path}"
-            )
+    if last_recording_path and options.stop_notification:
+        send_notification(
+            "Recording Stopped", f"Recording saved to: {last_recording_path}"
+        )
     last_recording_path = None
 
 
-def _update_pause_state():
+def _update_pause_state() -> None:
     if recording_indicator_instance:
         recording_indicator_instance.set_paused(recorder.is_paused)
 
 
-async def _start_recording_task(source: str, file_path: str, **kwargs):
+async def _start_recording_task(source: str, file_path: str, **kwargs) -> None:
     global last_recording_path
 
     rec_config = RecorderConfig(source=source, path=file_path, **kwargs)
@@ -63,12 +65,12 @@ async def _start_recording_task(source: str, file_path: str, **kwargs):
         send_notification(
             "Recording Canceled", "The desktop portal capture was canceled."
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         last_recording_path = None
-        send_notification("Recording Error", f"An unexpected error occurred: {str(e)}")
+        send_notification("Recording Error", f"An unexpected error occurred: {e!s}")
 
 
-def _record_source(source: str, *args: str, **kwargs):
+def _record_source(source: str, *args: str, **kwargs) -> None:
     global last_recording_path
 
     if not recorder.is_available:
@@ -79,7 +81,7 @@ def _record_source(source: str, *args: str, **kwargs):
         recorder.stop_recording()
         return
 
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    timestamp = datetime.now(UTC).strftime("%Y-%m-%d_%H-%M-%S")
     file_path = os.path.expanduser(f"~/Videos/recording_{timestamp}.mp4")
     last_recording_path = file_path
 
@@ -93,32 +95,32 @@ def _record_source(source: str, *args: str, **kwargs):
     )
 
 
-def stop_recording():
+def stop_recording() -> None:
     if recorder.active:
         recorder.stop_recording()
 
 
-def pause_recording():
+def pause_recording() -> None:
     if recorder.active and not recorder.is_paused:
         recorder.pause_recording()
         _update_pause_state()
 
 
-def unpause_recording():
+def unpause_recording() -> None:
     if recorder.active and recorder.is_paused:
         recorder.continue_recording()
         _update_pause_state()
 
 
-def record_screen(*args: str):
+def record_screen(*args: str) -> None:
     _record_source("screen", *args)
 
 
-def record_portal(*args: str):
+def record_portal(*args: str) -> None:
     _record_source("portal", *args)
 
 
-async def _record_region_task():
+async def _record_region_task() -> None:
     """Selects a region using 'slurp' and starts recording it."""
     try:
         if recorder.active:
@@ -130,7 +132,7 @@ async def _record_region_task():
         proc = await asyncio.create_subprocess_exec(
             "slurp", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
-        stdout, stderr = await proc.communicate()
+        stdout, _stderr = await proc.communicate()
 
         if proc.returncode != 0:
             if proc.returncode == 127:
@@ -162,17 +164,17 @@ async def _record_region_task():
             "Dependency Missing",
             "The 'slurp' tool is required for region recording but was not found.",
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         send_notification(
-            "Region Selection Error", f"An unexpected error occurred: {str(e)}"
+            "Region Selection Error", f"An unexpected error occurred: {e!s}"
         )
 
 
-def record_region(*args: str):
+def record_region(*args: str) -> None:
     asyncio.create_task(_record_region_task())
 
 
-def setup_recorder_commands():
+def setup_recorder_commands() -> None:
     command_manager.add_command(
         command_name="recorder-record-screen",
         callback=record_screen,
@@ -189,7 +191,7 @@ def setup_recorder_commands():
     )
 
 
-def setup_recorder_signals():
+def setup_recorder_signals() -> None:
     recorder.connect("recording_started", _on_recording_started)
     recorder.connect("recording_stopped", _on_recording_stopped)
 

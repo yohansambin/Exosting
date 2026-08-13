@@ -5,6 +5,7 @@ description = "A fork of Exo shell meant for Niri and Hyprland."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "aiofiles>=25.1.0",
     "ignis",
 ]
 

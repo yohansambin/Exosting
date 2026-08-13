@@ -33,20 +33,6 @@ class NetworkTab(widgets.Box):
                 child=[
                     CategoryLabel("Miscellaneous"),
                     SettingsRow(
-                        title="Open Network Settings",
-                        description="Open the network panel in the GNOME Settings application for advanced configuration.",
-                        child=[
-                            Button.button(
-                                icon="barefoot",
-                                label="Open Settings",
-                                on_click=lambda x: self._open_gnome_settings(),
-                                hexpand=False,
-                                halign="start",
-                            )
-                        ],
-                    ),
-                    widgets.Separator(),
-                    SettingsRow(
                         title="Refresh Network Status",
                         description="Manually refresh the status of all network connections.",
                         child=[
@@ -113,14 +99,6 @@ class NetworkTab(widgets.Box):
             self.wifi_list_box.append(
                 widgets.Label(label="Wi-Fi is disabled.", halign="center", vexpand=True)
             )
-
-    def _open_gnome_settings(self):
-        try:
-            env = os.environ.copy()
-            env["XDG_CURRENT_DESKTOP"] = "GNOME"
-            subprocess.Popen(["gnome-control-center", "network"], env=env)
-        except FileNotFoundError:
-            send_notification("Error", "GNOME Control Center not found.")
 
     def _get_wifi_icon_name(self, ap):
         is_secured = ap.security != ""

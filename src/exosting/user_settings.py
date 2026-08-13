@@ -1,7 +1,7 @@
 import os
-from ignis import utils
+
 from ignis.app import IgnisApp
-from ignis.options_manager import OptionsGroup, OptionsManager, TrackedList
+from ignis.options_manager import OptionsGroup, OptionsManager
 from ignis.window_manager import WindowManager
 
 window_manager = WindowManager.get_default()
@@ -9,8 +9,10 @@ app = IgnisApp.get_initialized()
 
 
 class UserSettings(OptionsManager):
-    def __init__(self):
-        super().__init__(file=os.path.expanduser("~/.config/ignis/exosting/user_settings.json"))
+    def __init__(self) -> None:
+        super().__init__(
+            file=os.path.expanduser("~/.config/ignis/exosting/user_settings.json")
+        )
 
     class Appearance(OptionsGroup):
         class WallpaperColors(OptionsGroup):
@@ -99,7 +101,7 @@ class UserSettings(OptionsManager):
             module_backgrounds: bool = True
 
         class Notifications(OptionsGroup):
-            anchor: list = ["top", "right"]
+            anchor: list = ["top", "right"]  # noqa: RUF012
             compact_popup: bool = False
 
         class Launcher(OptionsGroup):
@@ -123,7 +125,7 @@ class UserSettings(OptionsManager):
             record_audio: bool = True
 
         class OSD(OptionsGroup):
-            anchor: list = ["bottom", "right"]
+            anchor: list = ["bottom", "right"]  # noqa: RUF012
             vertical: bool = False
 
         recorder = Recorder()

@@ -1,8 +1,10 @@
 import os
 
-from ignis.utils import Utils
+from ignis import utils
 from ignis.command_manager import CommandManager
 from ignis.css_manager import CssInfoPath, CssManager
+from ignis.utils import Utils
+
 from exosting.modules import (
     OSD,
     Bar,
@@ -14,18 +16,15 @@ from exosting.modules import (
     QuickCenter,
     Settings,
 )
-from exosting.scripts import auto_dark
-from exosting.scripts import BarStyles, Wallpaper
+from exosting.scripts import BarStyles, Wallpaper, auto_dark
 from exosting.user_settings import user_settings
-
-from ignis import utils
 
 command_manager = CommandManager.get_default()
 
 Wallpaper.generatePreviews()
 
 css_manager = CssManager.get_default()
-css_manager.widgets_style_priority = "user"
+css_manager.widgets_style_priority("user")
 css_manager.apply_css(
     CssInfoPath(
         name="main",
@@ -46,7 +45,9 @@ if not user_settings.appearance.wallcolors.dark_mode:
     css_manager.apply_css(
         CssInfoPath(
             name="lightthemeoverrides",
-            path=os.path.expanduser("~/.config/ignis/exosting/styles/lightthemeoverrides.scss"),
+            path=os.path.expanduser(
+                "~/.config/ignis/exosting/styles/lightthemeoverrides.scss"
+            ),
             compiler_function=lambda path: utils.sass_compile(path=path),
             priority="user",
         )
@@ -85,6 +86,6 @@ M3Test()
 NotificationPopup(0)
 
 command_manager.add_command("toggle-launcher", lambda: launcher.toggle_window())
- 
+
 # Auto Dark Mode
 utils.Poll(60000, lambda _: auto_dark())

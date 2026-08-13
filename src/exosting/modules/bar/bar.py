@@ -24,7 +24,7 @@ window_manager = WindowManager.get_default()
 class Bar:
     def __init__(self, monitor: int = 0):
         self.monitor = monitor
-        self.__wins = {}
+        self.__wins: dict[int, widgets.Window] = {}
         self.media = Media()
         self.window_info = WindowInfo()
         self.workspaces = Workspaces()

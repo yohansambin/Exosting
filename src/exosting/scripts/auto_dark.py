@@ -1,14 +1,15 @@
 import datetime
+
 from exosting.scripts import Wallpaper
 from exosting.user_settings import user_settings
 
 
-def auto_dark():
+def auto_dark() -> None:
     options = user_settings.appearance.wallcolors.auto_dark
     if options.enabled:
         start_time = datetime.time(int(options.start_hour), int(options.start_min))
         end_time = datetime.time(int(options.end_hour), int(options.end_min))
-        current_time = datetime.datetime.now().time()
+        current_time = datetime.datetime.now(datetime.UTC).time()
 
         dark_mode = user_settings.appearance.wallcolors.dark_mode
 
@@ -28,6 +29,6 @@ def auto_dark():
                     Wallpaper.setDarkMode(False)
 
 
-def setAutoDark(active):
+def setAutoDark(active) -> None:
     user_settings.appearance.wallcolors.auto_dark.set_enabled(active)
     auto_dark()
